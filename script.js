@@ -58,11 +58,15 @@ function playGame() {
       return (computerScore += 1);
     }
   }
-  for (; playerScore < 5 && computerScore < 5; ) {
+  for (let roundNum = 0; roundNum < 5; roundNum++) {
     humanChoice = getHumanChoice();
     computerChoice = getComputerChoice();
     playRound(humanChoice, computerChoice);
     console.log("Player: " + playerScore + " - Computer: " + computerScore);
   }
-  playerScore == 5 ? console.log("You win!") : console.log("You lose!");
+  playerScore > computerScore
+    ? console.log("You win!")
+    : playerScore == computerScore
+    ? console.log("It's a tie!")
+    : console.log("You lose!");
 }
