@@ -1,7 +1,7 @@
 # rock-paper-scissors-2
 This game is part of The Odin Project foundation course.
 
-It's based on a mix of IF statements and a loop cycle to play the game until a player gets to 5 wins.
+It's based on a mix of IF statements and a loop cycle to play the game for 5 rounds.
 
 What it does:
 
