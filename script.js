@@ -1,30 +1,8 @@
-/* 1. When function playRound() is called, ask player to choose a move
-    1a. Use the prompt function to select the move and store it in getHumanChoice
-    1b. it needs to be case insensitive
-2. Randomly select computer's move
-    2a. Use Math.random() and Math.floor to establish a random number ranging from 0 to 99, assign each move to a series of numbers store it in getComputer
-3. Confront player's move with the computer's one using if else statement or ternary operator
-4. Return the result with console.log
-5. Keep track, announce and update Scores after every round.
-    5a. store the in humanScore and computerScore
-    5b. start from 0.
-6. Create a function playGame() that plays 5 rounds tracks score and announces the winner at the end.
-*/
+let playerScore = 0;
+let computerScore = 0;
 
-console.log("Welcome to rock, paper, scissor from Nhyk365!");
-console.log(
-  "to play choose one between rock, paper or scissor, write it down and press enter!"
-);
-
-let humanChoice;
-let computerChoice;
-
-function getHumanChoice() {
-  let choice = prompt("Make your choice", "rock").toLowerCase();
-  return choice;
-}
-
-function getComputerChoice() {
+/* Selects a random move for the computer */
+function getComputer() {
   let num = Math.floor(Math.random() * 100) - 1;
   if (num < 33) {
     return "rock";
@@ -35,38 +13,70 @@ function getComputerChoice() {
   }
 }
 
-let win = (human, computer) =>
-  console.log("You win! " + human + " beats " + computer);
-let lose = (human, computer) =>
-  console.log("You lose! " + computer + " beats " + human);
-
-function playGame() {
-  let playerScore = 0;
-  let computerScore = 0;
-  function playRound(human, computer) {
-    if (human == computer) {
-      console.log(`It's a tie: ${human} VS ${computer}!`);
-    } else if (
-      (human == "rock" && computer == "scissors") ||
-      (human == "paper" && computer == "rock") ||
-      (human == "scissors" && computer == "paper")
-    ) {
-      win(humanChoice, computerChoice);
-      return (playerScore += 1);
-    } else {
-      lose(humanChoice, computerChoice);
-      return (computerScore += 1);
-    }
+function playRound(human, computer) {
+  if (human == computer) {
+    resultDiv.innerText = `It's a tie: ${human} VS ${computer}!`;
+    scoreDiv.innerText =
+      "Player: " + playerScore + " - Computer: " + computerScore;
+  } else if (
+    (human == "rock" && computer == "scissors") ||
+    (human == "paper" && computer == "rock") ||
+    (human == "scissors" && computer == "paper")
+  ) {
+    win(human, computer);
+    scoreDiv.innerText =
+      "Player: " + (playerScore + 1) + " - Computer: " + computerScore;
+    return (playerScore += 1);
+  } else {
+    lose(human, computer);
+    scoreDiv.innerText =
+      "Player: " + playerScore + " - Computer: " + (computerScore + 1);
+    return (computerScore += 1);
   }
-  for (let roundNum = 0; roundNum < 5; roundNum++) {
-    humanChoice = getHumanChoice();
-    computerChoice = getComputerChoice();
-    playRound(humanChoice, computerChoice);
-    console.log("Player: " + playerScore + " - Computer: " + computerScore);
-  }
-  playerScore > computerScore
-    ? console.log("You win!")
-    : playerScore == computerScore
-    ? console.log("It's a tie!")
-    : console.log("You lose!");
 }
+
+/* Buttons */
+const rockButton = document.getElementById("rock");
+const paperButton = document.getElementById("paper");
+const scissorsButton = document.getElementById("scissors");
+
+rockButton.addEventListener("click", () => playRound("rock", getComputer()));
+paperButton.addEventListener("click", () => playRound("paper", getComputer()));
+scissorsButton.addEventListener("click", () =>
+  playRound("scissors", getComputer())
+);
+
+/* Result */
+const resultDiv = document.getElementById("result");
+
+let win = (human, computer) =>
+  (resultDiv.innerText = "You win! " + human + " beats " + computer);
+
+let lose = (human, computer) =>
+  (resultDiv.innerText = "You lose! " + computer + " beats " + human);
+
+/* Score tracking */
+const scoreDiv = document.getElementById("score");
+
+/* Game tracking, when someone reaches 5 points the game ends and resets */
+const buttons = document.querySelectorAll("button");
+
+function resetGame() {
+  playerScore = 0;
+  computerScore = 0;
+  scoreDiv.innerText =
+    "Player: " + playerScore + " - Computer: " + computerScore;
+  resultDiv.innerText = ``;
+}
+
+buttons.forEach((button) =>
+  button.addEventListener("click", () => {
+    if (playerScore == 5) {
+      alert(`You win ${playerScore} to ${computerScore}!`);
+      resetGame();
+    } else if (computerScore == 5) {
+      alert(`You lose ${playerScore} to ${computerScore}!`);
+      resetGame();
+    }
+  })
+);
